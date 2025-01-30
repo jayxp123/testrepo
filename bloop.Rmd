@@ -1,0 +1,586 @@
+---
+title: "Jay Jun - HW 3"
+date: "September 27, 2024"
+output: html_document
+---
+
+## Problem Set 3
+
+### 1a. 
+
+The standard error is the standard deviation of the sampling distribution, which is obtained by square root of the standard deviation. The standard deviation the amount of dispersion/variability from the mean, and the standard error is the square root of that.
+
+### 1b. 
+
+Randomization inference is used to test the sharp null hypothesis of no effect by assuming that the individual Yi(0) = Yi(1). Essentially the treatment effect is zero for all subjects. This is also known as the sharp null hypothesis of no effect.
+
+### 1c. 
+
+The 95% confidence interval is if one were to repeat the same experiment many times, and for each one of those experiments, we were to calculate a confidence interval, 95% of those intervals will bracket the true average treatment effect.  
+
+### 1d. 
+
+Complete random assignment is where there is exactly any units are assigned to each condition randomly with equal probability where exactly m of N units are assigned to the treatment group with equal probability, and the rest N-m units are assigned to the control. 
+
+Block random assignment (also known as blocking) is where subjects with similar traits are partitioned into subgroups, and complete random assignment occurs within each block. Effectively, each block is a mini experiment. If the potential outcomes of each individual in the blocks are similar, this can also improve precision. 
+
+Cluster assignment is different from the rest where the individuals aren’t randomly allocated to treatment or control, rather the group or clusters are randomly allocated to treatment and control. Every individual in the cluster receives the same treatment/non-treatment, and so the treatment or non-treatment is applied at the group level. 
+
+
+### 1e. Balanced Design and Standard Error
+
+One of the fundamental reasons why having a balanced design is desirable is that when using equation 3.4 (shown below in question 2), having a balanced design reduces standard error. For instance, let’s plug in some numbers using equation 3.4 to show that standard error is reduced when a balanced design is implemented. 
+Let’s say N = 100, Var(Yi(0)) = 25, Var(Yi(1)) = 36 and the Cov(Yi(0)), Yi(1)) = 10 
+Plugging in numbers and assuming that it is a balanced design, there will be 50 in the treatment and 50 in the control in the denominator in equation 3.4, we get the true standard error estimate of around .90  
+Now let’s say the design is unbalanced and we assume that 25 goes into treatment and 75 goes intro control, plugging in the same numbers as before but with the changes mentioned before we get a true standard error of around 1.2.
+Overall the standard error of the estimated ATE is lowered by having a balanced design, but also simplifies the formula overall as well. 
+
+### 2.
+Let’s start with the equation 3.4:
+
+$$
+SE(\hat{ATE}) = \sqrt{\frac{1}{N-1} \left[ \frac{m \cdot \text{Var}(Y_i(0))}{N-m} + \frac{(N-m) \cdot \text{Var}(Y_i(1))}{m} + 2 \cdot \text{Cov}(Y_i(0), Y_i(1)) \right]}
+$$
+
+Let’s substitute $Y_i(1)$ with $Y_i(0) + \tau$ and $N$ with $2m$:
+
+$$
+SE(\hat{ATE}) = \sqrt{\frac{1}{2m-1} \left[ \frac{m \cdot \text{Var}(Y_i(0))}{2m-m} + \frac{(2m-m) \cdot \text{Var}(Y_i(0) + \tau)}{m} + 2 \cdot \text{Cov}(Y_i(0), Y_i(0) + \tau) \right]}
+$$
+
+Let’s simplify further, since $\tau$ is a constant and the variance of a constant is 0, we can effectively remove $\tau$ from the equation. Simplifying everything, adding like terms, and canceling out like terms in the fractions, we end up with:
+
+$$
+SE(\hat{ATE}) = \sqrt{\frac{1}{2m-1} \left[ \text{Var}(Y_i(0)) + \text{Var}(Y_i(0)) + 2 \cdot \text{Cov}(Y_i(0), Y_i(0) + \tau) \right]}
+$$
+
+Let’s simplify and evaluate $2 \cdot \text{Cov}(Y_i(0), Y_i(0) + \tau)$ through the addition rule of the property of covariance, which is $\text{Cov}(X + Y, Z) = \text{Cov}(X, Z) + \text{Cov}(Y, Z)$.
+
+$$
+2 \cdot \text{Cov}(Y_i(0), Y_i(0) + \tau) = 2 \cdot \left( \text{Cov}(Y_i(0), Y_i(0)) + \text{Cov}(Y_i(0), \tau) \right)
+$$
+
+A covariance with itself is just its variance, and covariance with a constant is 0, so this would simplify to:
+
+$$
+2 \cdot \left( \text{Var}(Y_i(0)) + 0 \right) = 2 \cdot \text{Var}(Y_i(0))
+$$
+
+Now putting it all together, we end up with:
+
+$$
+SE(\hat{ATE}) = \sqrt{\frac{1}{2m-1} \left[ \text{Var}(Y_i(0)) + \text{Var}(Y_i(0)) + 2 \cdot \text{Var}(Y_i(0)) \right]}
+$$
+
+Simplifying everything together, we get the final equation:
+
+$$
+SE(\hat{ATE}) = \sqrt{\frac{4 \cdot \text{Var}(Y_i(0))}{2m-1}}
+$$
+### 3.
+
+Let’s set up the problem:
+
+$$
+Y_i(1) = Y_i(0) + \tau
+$$
+
+The correlation equation is:
+
+$$
+\frac{\text{Cov}(Y_i(0), Y_i(1))}{\sqrt{\text{Var}(Y_i(0)) \cdot \text{Var}(Y_i(1))}}
+$$
+
+### Evaluating the Numerator
+
+Let’s substitute $Y_i(1) = Y_i(0) + \tau$ into $\text{Cov}(Y_i(0), Y_i(1))$:
+
+$$
+\text{Cov}(Y_i(0), Y_i(0) + \tau)
+$$
+
+Let’s simplify and evaluate $\text{Cov}(Y_i(0), Y_i(0) + \tau)$ through the addition rule of the property of covariance, which is:
+
+$$
+\text{Cov}(X + Y, Z) = \text{Cov}(X, Z) + \text{Cov}(Y, Z)
+$$
+
+Thus:
+
+$$
+\text{Cov}(Y_i(0), Y_i(0) + \tau) = \text{Cov}(Y_i(0), Y_i(0)) + \text{Cov}(Y_i(0), \tau)
+$$
+
+A covariance with itself is just its variance, and the covariance with a constant is 0, so this simplifies to:
+
+$$
+\text{Var}(Y_i(0)) + 0 = \text{Var}(Y_i(0))
+$$
+
+### Variance and Standard Deviation
+
+The variance is also the standard deviation squared, such that $\text{Var}(Y_i(0)) = \sigma^2$.
+
+We know that the variances are equal because the problem tells us that $\text{Var}(Y_i(0)) = \text{Var}(Y_i(1))$, so we can assume both are also $\sigma^2$.
+
+### Final Expression
+
+Putting it all together:
+
+$$
+\frac{\sigma^2}{\sqrt{\sigma^2 \cdot \sigma^2}} = 1.0
+$$
+
+### 4. 
+<table style="text-align: center; width: 100%;">
+<tr>
+  <th>Subject</th> <th>Yi(0)</th> <th>Yi(A)</th> <th>Yi(B)</th>
+</tr>
+<tr>
+  <td>Miriam</td> <td>1</td> <td>2</td> <td>3</td>
+</tr>
+<tr>
+  <td>Benjamin</td> <td>2</td> <td>3</td> <td>3</td>
+</tr>
+<tr>
+  <td>Helen</td> <td>3</td> <td>4</td> <td>3</td>
+</tr>
+<tr>
+  <td>Eva</td> <td>4</td> <td>5</td> <td>3</td>
+</tr>
+<tr>
+  <td>Billie</td> <td>5</td> <td>6</td> <td>3</td>
+</tr>
+</table>
+
+### Yi(A) – Yi(0)
+
+<table style="text-align: center; width: 100%;">
+<tr>
+  <th>Subject</th> <th>Yi(0)</th> <th>Yi(A)</th> <th>Treatment Effect of A</th>
+</tr>
+<tr>
+  <td>Miriam</td> <td>1</td> <td>2</td> <td>1</td>
+</tr>
+<tr>
+  <td>Benjamin</td> <td>2</td> <td>3</td> <td>1</td>
+</tr>
+<tr>
+  <td>Helen</td> <td>3</td> <td>4</td> <td>1</td>
+</tr>
+<tr>
+  <td>Eva</td> <td>4</td> <td>5</td> <td>1</td>
+</tr>
+<tr>
+  <td>Billie</td> <td>5</td> <td>6</td> <td>1</td>
+</tr>
+</table>
+
+### Yi(B) – Yi(0)
+
+<table style="text-align: center; width: 100%;">
+<tr>
+  <th>Subject</th> <th>Yi(0)</th> <th>Yi(B)</th> <th>Treatment Effect of B</th>
+</tr>
+<tr>
+  <td>Miriam</td> <td>1</td> <td>3</td> <td>2</td>
+</tr>
+<tr>
+  <td>Benjamin</td> <td>2</td> <td>3</td> <td>1</td>
+</tr>
+<tr>
+  <td>Helen</td> <td>3</td> <td>3</td> <td>0</td>
+</tr>
+<tr>
+  <td>Eva</td> <td>4</td> <td>3</td> <td>-1</td>
+</tr>
+<tr>
+  <td>Billie</td> <td>5</td> <td>3</td> <td>-2</td>
+</tr>
+</table>
+
+### Variance Calculations
+
+Let’s calculate Var(Yi(0)):
+
+\[
+\frac{1}{5}((1 - 3)^2 + (2 - 3)^2 + (3 - 3)^2 + (4 - 3)^2 + (5 - 3)^2) = 2
+\]
+
+Let’s calculate Var(Yi(A)):
+
+\[
+\frac{1}{5}((2 - 4)^2 + (3 - 4)^2 + (4 - 4)^2 + (5 - 4)^2 + (6 - 4)^2) = 2
+\]
+
+Let’s calculate Var(Yi(B)):
+
+\[
+\frac{1}{5}((3 - 3)^2 + (3 - 3)^2 + (3 - 3)^2 + (3 - 3)^2 + (3 - 3)^2) = 0
+\]
+
+### Covariance Calculations
+
+Let’s calculate covariances for Yi(0) and Yi(A):
+
+<table style="text-align: center; width: 100%;">
+<tr>
+  <th>Yi(0)</th> <th>Yi(A)</th> <th>Yi(0)-u0</th> <th>Yi(A)-uA</th> <th>(Yi(0)-u0)(Yi(A)-uA)</th>
+</tr>
+<tr>
+  <td>1</td> <td>2</td> <td>-2</td> <td>-2</td> <td>4</td>
+</tr>
+<tr>
+  <td>2</td> <td>3</td> <td>-1</td> <td>-1</td> <td>1</td>
+</tr>
+<tr>
+  <td>3</td> <td>4</td> <td>0</td> <td>0</td> <td>0</td>
+</tr>
+<tr>
+  <td>4</td> <td>5</td> <td>1</td> <td>1</td> <td>1</td>
+</tr>
+<tr>
+  <td>5</td> <td>6</td> <td>2</td> <td>2</td> <td>4</td>
+</tr>
+</table>
+
+\[
+4 + 1 + 0 + 1 + 4 = 10
+\]
+\[
+\text{Cov}(Yi(0), Yi(A)) = \frac{1}{5} \cdot 10 = 2
+\]
+
+Let’s calculate covariances for Yi(0) and Yi(B):
+
+<table style="text-align: center; width: 100%;">
+<tr>
+  <th>Yi(0)</th> <th>Yi(B)</th> <th>Yi(0)-u0</th> <th>Yi(B)-uB</th> <th>(Yi(0)-u0)(Yi(B)-uB)</th>
+</tr>
+<tr>
+  <td>1</td> <td>3</td> <td>-2</td> <td>0</td> <td>0</td>
+</tr>
+<tr>
+  <td>2</td> <td>3</td> <td>-1</td> <td>0</td> <td>0</td>
+</tr>
+<tr>
+  <td>3</td> <td>3</td> <td>0</td> <td>0</td> <td>0</td>
+</tr>
+<tr>
+  <td>4</td> <td>3</td> <td>1</td> <td>0</td> <td>0</td>
+</tr>
+<tr>
+  <td>5</td> <td>3</td> <td>2</td> <td>0</td> <td>0</td>
+</tr>
+</table>
+
+\[
+\text{Cov}(Yi(0), Yi(B)) = \frac{1}{5} \cdot 0 = 0
+\]
+
+### Standard Error Calculations
+
+Using equation 3.4 for Standard Error for Yi(A):
+
+\[
+SE(\hat{ATE}) = \sqrt{\frac{1}{5-1} \left[ \frac{3 \cdot 2}{5-3} + \frac{2 \cdot 2}{3} + 2 \cdot 2 \right]}
+\]
+
+Standard Error for Yi(A) = 1.44
+
+Using equation 3.4 for Standard Error for Yi(B):
+
+\[
+SE(\hat{ATE}) = \sqrt{\frac{1}{5-1} \left[ \frac{3 \cdot 2}{5-3} + \frac{2 \cdot 0}{3} + 2 \cdot 0 \right]}
+\]
+
+Standard Error for Yi(B) = 0.87
+
+## Problem 4b
+
+## Problem 5a
+
+The difference in means is: Mean(yi(1)) - Mean(yi(0))
+
+Randomization - Village 1 to treatment:
+
+Treatment Mean: 15  
+Control Mean: \(\frac{15 + 20 + 20 + 10 + 15 + 15}{6} = 15.83\)  
+Difference in Means: -0.83
+
+Randomization - Village 2 to treatment:
+
+Treatment Mean: 15  
+Control Mean: \(\frac{10 + 20 + 20 + 10 + 15 + 15}{6} = 15\)  
+Difference in Means: 0
+
+Randomization - Village 3 to treatment:
+
+Treatment Mean: 30  
+Control Mean: \(\frac{10 + 15 + 20 + 10 + 15 + 15}{6} = 14.17\)  
+Difference in Means: 15.83
+
+Randomization - Village 4 to treatment:
+
+Treatment Mean: 15  
+Control Mean: \(\frac{10 + 15 + 20 + 10 + 15 + 15}{6} = 14.17\)  
+Difference in Means: 0.83
+
+Randomization - Village 5 to treatment:
+
+Treatment Mean: 20  
+Control Mean: \(\frac{10 + 15 + 20 + 20 + 15 + 15}{6} = 15.83\)  
+Difference in Means: 4.17
+
+Randomization - Village 6 to treatment:
+
+Treatment Mean: 15  
+Control Mean: \(\frac{10 + 15 + 20 + 20 + 10 + 15}{6} = 15\)  
+Difference in Means: 0
+
+Randomization - Village 7 to treatment:
+
+Treatment Mean: 30  
+Control Mean: \(\frac{10 + 15 + 20 + 20 + 10 + 15}{6} = 15\)  
+Difference in Means: 15
+
+## Problem 5b
+
+The textbook shows the true ATE to be 5. Taking the average of the difference in means:
+
+\[
+\frac{15 + 0 + 4.17 + 0.83 + 15.83 + 0 - 0.83}{7} = 5
+\]
+
+## Problem 5c
+
+Standard Deviation (using n - 1):
+
+\[
+\sqrt{\frac{(15-5)^2 + (0-5)^2 + (4.17-5)^2 + (0.83-5)^2 + (15.83-5)^2 + (0-5)^2 + (-0.83-5)^2}{6}} = 7.3
+\]
+
+Standard Error:
+
+\[
+SE(\hat{ATE}) = \sqrt{\frac{1}{N-1} \left[ \frac{m \cdot \text{Var}(Y_i(0))}{N-m} + \frac{(N-m) \cdot \text{Var}(Y_i(1))}{m} + 2 \cdot \text{Cov}(Y_i(0), Y_i(1)) \right]}
+\]
+
+## Problem 5d
+
+This experimental design has more sampling variability than the design in which two villages out of seven are assigned to treatment because the variance for Yi(0) is less than the variance of Yi(1). Since we are dividing \((N-m) \cdot \text{Var}(Y_i(1)) / m\) by 1, there is nothing reducing this term. By adding more to the treatment group, we are now dividing by more than 1, which reduces the term, and the overall standard error of the ATE. Assigning 2 to the treatment rather than 1 would decrease the sampling variability and increase the precision of the true standard error of the estimated ATE.
+
+## Problem 5e
+
+### 6 
+
+17  of the simulated random assignments generate an estimated ATE that is at least as large as the actual estimate of the ATE is. The implied one tailed p-value would be half of the two tailed p value, which is given as .0037 so the implied one tailed p value is .00185.  37  of the simulated random assignments generate an estimated ATE that is at least as large in absolute value as the actual estimate of the ATE. The implied two-tailed p-value is .0037.
+
+### 7
+
+## Problem 8a. 
+
+### Effect for Texas
+
+**Note for this problem: variances were found through R using `var()`**
+
+- Expected Average for four-year length = 76.88  
+- Expected Average for two-year length = 60.13  
+- ATE = 60.13 – 76.88 = -16.75
+
+### Effect for Arkansas:
+
+- Expected Average for four-year length = 30.71  
+- Expected Average for two-year length = 20.61  
+- ATE = 24.25 – 40.68 = -10.10
+
+## 8b. Estimate Standard Error of the Estimated ATE for Texas:
+
+- Variance of 0 (using n-1, which is 15) = 956.25  
+- Variance of 1 (using n-1, which is 14) = 413.70  
+
+Using equation 3.6:
+
+\[
+\hat{SE} = \sqrt{\frac{956.25}{16} + \frac{413.70}{15}}
+\]
+
+The standard error for the estimated ATE for Texas is: 9.35
+
+### Estimated Standard Error of the Estimated ATE for Arkansas:
+
+- Variance of 0 (using n-1, which is 16) = 148.60  
+- Variance of 1 (using n-1, which is 17) = 50.25  
+
+Using equation 3.6:
+
+\[
+\hat{SE} = \sqrt{\frac{148.60}{17} + \frac{50.25}{18}}
+\]
+
+The standard error for the estimated ATE for Arkansas is: 3.40
+
+## 8c. Estimation of the Overall ATE for Both States
+
+Using this equation:
+
+\[
+ATE = \sum_j \frac{N_j}{N} ATE_j
+\]
+
+The estimation of the overall ATE for both states combined is as follows:
+
+We are going to weight each ATE in each block and add them up:
+
+\[
+\left(\frac{31}{66} \times (-16.80)\right) + \left(\frac{35}{66} \times (-10.10)\right) = -13.25
+\]
+
+Thus, the estimated overall ATE for both states combined is -13.25.
+
+## 8d. Bias in Pooling the Data for Both States
+
+There are several reasons why simply pooling the data for the two states and comparing the average number of bills introduced by two-year senators to the average number of bills introduced by four-year senators leads to biased estimates of the overall ATE.
+
+1. **Sample Size Difference**: Texas has 31 observations and Arkansas has 35 observations. When pooling the data without weighting, there is no adjustment for these differences in sample sizes, which can bias the overall estimate.
+2. **Assumption of Homogeneity**: Pooling assumes that the average treatment effect is the same across both states, but political factors and legislative practices may vary between Texas and Arkansas, leading to different ATEs in each state.
+
+## 8e. Estimating the Standard Error for the Overall ATE
+
+Using equation 3.13 to estimate the standard error for the overall ATE:
+
+\[
+SE(\hat{ATE}) = \sqrt{(SE_1)^2 \left(\frac{N_1}{N}\right)^2 + (SE_2)^2 \left(\frac{N_2}{N}\right)^2}
+\]
+
+Substituting the values for Texas and Arkansas:
+
+\[
+SE(\hat{ATE}) = \sqrt{(9.35)^2 \left(\frac{31}{66}\right)^2 + (3.40)^2 \left(\frac{35}{66}\right)^2}
+\]
+
+The estimated standard error for the overall ATE is 4.75.
+
+## 8f. Randomization Results
+
+Using the code provided on Courseworks, we get the results:
+
+- The estimate we get is -13.2168 with a two-tailed p-value of 0.008. 
+- This estimate is very close to the one I calculated above, which was -13.25.
+
+## 9a. Violation of the Non-Interference Assumption
+
+Yes, I do believe that the design feature of each pair of horses running in the same race could violate the non-interference assumption. This is because Camerer’s bet will affect the odds. Once Camerer initiates the bet, others will likely follow, betting on the same horse. This means fewer people will bet on the other horse, actively affecting the control group. The treatment of one horse affects the control horse, violating the assumption.
+
+However, potential outcomes could be defined to satisfy the non-interference assumption. If we analyze the potential outcomes as pairs, I believe the assumption could be satisfied. Instead of looking at individual horses, we could look at pairs of horses. The control or \(y_i(0)\) could be the difference in bets between the pairs, and the treatment would be the difference in bets with no bets placed (i.e., theoretically zero).
+
+## 9b. Randomization Check
+
+The first part of the code `ri2_cov` is a randomization check to assess whether treatment and control horses attracted similarly sized bets prior to the experiment intervention.
+
+- We get an estimate of -15.29412 and a p-value of 0.3721. 
+- This suggests that treatment horses received 15 fewer dollars in bets prior to the intervention, but the p-value is high. This lack of significance indicates no major differences between the groups, which is expected in a randomization check.
+
+## 9c. ATE Calculation for Horses
+
+Average increase in bets during the experimental period for treatment horses:
+
+\[
+\frac{970 + 810 + 790 + 531 + 209 + 260 + 688 + 367 + 555 + 456 + 885 + 181 + 465 + 160 + 256 + 34 + 224}{17} = 461.24
+\]
+
+Average increase in bets during the experimental period for control horses:
+
+\[
+\frac{2030 + 761 + 1760 + 964 + 373 + 220 + 1050 + 549 + 355 + 609 + 126 + 177 + 222 + 190 + 42 + 88 + 198}{17} = 571.41
+\]
+
+The estimated ATE is:
+
+\[
+ATE = 461.24 - 571.41 = -110.18
+\]
+
+This suggests that, on average, horses in the treatment group received fewer bets compared to the control group.
+
+## 9d. ATE Calculation by Pair
+
+Here I will show that the estimated ATE is the same when subtracting the control group outcome from the treatment group outcome for each pair. I will calculate the average difference for the 17 pairs:
+
+\[
+\frac{-1060 + 49 - 970 - 433 - 164 + 40 - 362 - 182 + 200 - 153 + 759 + 4 + 243 - 30 + 214 - 54 + 26}{17} = -110.18
+\]
+
+This confirms that the estimated ATE I calculated above is consistent.
+
+## 9e. Randomization Inference Results
+
+Running randomization inference using the code from Courseworks reveals that the estimated ATE is -110.18 with a two-tailed p-value of 0.3161. This estimate is consistent with the hand-calculated ATE. A two-tailed p-value is appropriate here because the bet sizes could go in either direction.
+
+## 10. Clustered Design and Standard Error
+
+The standard error equations are as follows:
+
+\[
+SE(\hat{ATE}) = \sqrt{\frac{1}{N-1} \left[ \frac{m \cdot \text{Var}(Y_i(0))}{N-m} + \frac{(N-m) \cdot \text{Var}(Y_i(1))}{m} + 2 \cdot \text{Cov}(Y_i(0), Y_i(1)) \right]} \quad (3.4)
+\]
+
+\[
+SE(\hat{ATE}) = \sqrt{\frac{1}{k-1} \left[ \frac{m \cdot \text{Var}(\bar{y_j}(0))}{N-m} + \frac{(N-m) \cdot \text{Var}(\bar{y_j}(1))}{m} + 2 \cdot \text{Cov}(\bar{y_j}(0), \bar{y_j}(1)) \right]} \quad (3.22)
+\]
+
+(Note: there is a line above the 'y' in \(\bar{y_j}\)).
+
+## 10. Standard Error for ATE Estimations
+
+The standard error for complete random assignment of individual students to treatment and control is given by:
+
+\[
+SE(\hat{ATE}) = \sqrt{\frac{1}{N-1} \left( \frac{m \cdot \text{Var}(Y_i(0))}{N-m} + \frac{(N-m) \cdot \text{Var}(Y_i(1))}{m} + 2 \cdot \text{Cov}(Y_i(0), Y_i(1)) \right)} \quad (3.4)
+\]
+
+The standard error for clustered random assignment, where classrooms are assigned to treatment and control, is given by:
+
+\[
+SE(\hat{ATE}) = \sqrt{\frac{1}{k-1} \left( \frac{m \cdot \text{Var}(\bar{y_j}(0))}{N-m} + \frac{(N-m) \cdot \text{Var}(\bar{y_j}(1))}{m} + 2 \cdot \text{Cov}(\bar{y_j}(0), \bar{y_j}(1)) \right)} \quad (3.22)
+\]
+
+(Note: the \( \bar{y_j} \) represents the average of the outcomes in each classroom, and the line above the \( y \) is small but indicates an average.)
+
+## 10. Standard Error for ATE Estimations
+
+The standard error for complete random assignment of individual students to treatment and control is given by:
+
+\[
+SE(\hat{ATE}) = \sqrt{\frac{1}{N-1} \left( \frac{m \cdot \text{Var}(Y_i(0))}{N-m} + \frac{(N-m) \cdot \text{Var}(Y_i(1))}{m} + 2 \cdot \text{Cov}(Y_i(0), Y_i(1)) \right)} \quad (3.4)
+\]
+
+The standard error for clustered random assignment, where classrooms are assigned to treatment and control, is given by:
+
+\[
+SE(\hat{ATE}) = \sqrt{\frac{1}{k-1} \left( \frac{m \cdot \text{Var}(\bar{y_j}(0))}{N-m} + \frac{(N-m) \cdot \text{Var}(\bar{y_j}(1))}{m} + 2 \cdot \text{Cov}(\bar{y_j}(0), \bar{y_j}(1)) \right)} \quad (3.22)
+\]
+
+(Note: the \( \bar{y_j} \) represents the average of the outcomes in each classroom, and the line above the \( y \) is small but indicates an average.)
+
+## 10.
+
+The standard error for complete random assignment of individual students to treatment and control is given by:
+
+\[
+SE(\hat{ATE}) = \sqrt{\frac{1}{N-1} \left( \frac{m \cdot \text{Var}(Y_i(0))}{N-m} + \frac{(N-m) \cdot \text{Var}(Y_i(1))}{m} + 2 \cdot \text{Cov}(Y_i(0), Y_i(1)) \right)} \quad (3.4)
+\]
+
+The standard error for clustered random assignment, where classrooms are assigned to treatment and control, is given by:
+
+\[
+SE(\hat{ATE}) = \sqrt{\frac{1}{k-1} \left( \frac{m \cdot \text{Var}(\bar{y_j}(0))}{N-m} + \frac{(N-m) \cdot \text{Var}(\bar{y_j}(1))}{m} + 2 \cdot \text{Cov}(\bar{y_j}(0), \bar{y_j}(1)) \right)} \quad (3.22)
+\]
+
+
+### Explanation:
+The reason why this clustered design has approximately the same standard error as complete random assignment of individual students to treatment and control is that the clusters are created with complete random assignment as well. The variances of the potential outcomes are similar in both equations.
+
+When students are randomly allocated to each classroom, the mean variances in each cluster are smaller compared to the individual variances of the 800 students. While the number of students (800) is much larger than the number of clusters (32), each cluster represents an average of 25 students. Due to this averaging, the variability within each cluster is reduced, and since random allocation was used to create these clusters, this results in similar standard errors between the clustered and individual-level designs.
+
+11. 
